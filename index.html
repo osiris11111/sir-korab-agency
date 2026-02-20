@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sir Korab | 3D Creative Agency</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #050505;
+            --bg-bottom: #141416;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+            color: white;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom Font for Agency Title */
+        .agency-title {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Fixed Background Canvas */
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100svh; /* svh fixes mobile safari URL bar issues */
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* Custom Scrollbar (Hidden on mobile for cleaner look, visible on desktop) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-top);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        ::selection {
+            background: rgba(0, 243, 255, 0.3);
+            color: white;
+        }
+        /* Layer positioning for UI */
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050505] transition-opacity duration-1000 ease-in-out h-[100svh] w-full">
+        <div class="flex flex-col items-center px-4 text-center">
+            <div class="w-10 h-10 md:w-12 md:h-12 border-4 border-white/10 border-t-[#00f3ff] rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(0,243,255,0.4)]"></div>
+            <p class="agency-title text-white tracking-[0.3em] md:tracking-[0.4em] font-bold text-[10px] md:text-xs uppercase animate-pulse">Initializing Void...</p>
+        </div>
+    </div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <main class="ui-layer flex flex-col items-center w-full">
+        
+        <section class="h-[100svh] w-full flex flex-col justify-center items-center text-center px-4 sm:px-6">
+            <p class="agency-title font-bold text-lg sm:text-2xl md:text-3xl mb-3 md:mb-4 tracking-[0.2em] md:tracking-[0.3em] gs-fade-in uppercase bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-sm">
+                Sir Korab Agency
+            </p>
+            <h1 class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-lg gs-fade-in leading-[1.1]">
+                WE BUILD DIGITAL<br/>REALITIES
+            </h1>
+            <p class="text-base sm:text-lg md:text-xl text-gray-400 mb-8 md:mb-10 max-w-2xl font-light tracking-wide gs-fade-in px-2">
+                Pioneering the next era of spatial computing, viral short-form content, and highly immersive web experiences.
+            </p>
+            
+            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" class="gs-fade-in px-8 py-3.5 md:px-10 md:py-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-[10px] md:text-xs uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer pointer-events-auto inline-block">
+                Contact Us
+            </a>
+        </section>
+
+        <div class="h-[20vh] md:h-[50vh] w-full"></div>
+
+        <section class="min-h-[100svh] w-full flex flex-col items-center justify-center py-16 md:py-24 px-4 sm:px-6 md:px-12 pointer-events-none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl w-full pointer-events-auto">
+                
+                <div class="gs-reveal bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl md:translate-y-0">
+                    <div class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-[#00f3ff] to-transparent mb-4 md:mb-6 flex items-center justify-center opacity-80">
+                        <div class="h-9 w-9 md:h-11 md:w-11 rounded-full bg-[#111]"></div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white tracking-wide">Strategy & Psychology</h3>
+                    <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light">
+                        Architecting scalable digital blueprints. We dive deep into customer psychology to engineer advanced sales tactics, compelling call-to-actions, and high-converting ad videos that drive real revenue.
+                    </p>
+                </div>
+
+                <div class="gs-reveal bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl md:translate-y-12">
+                    <div class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-[#9d00ff] to-transparent mb-4 md:mb-6 flex items-center justify-center opacity-80">
+                        <div class="h-9 w-9 md:h-11 md:w-11 rounded-full bg-[#111]"></div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white tracking-wide">3D Web & E-Commerce</h3>
+                    <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light">
+                        Engineering frictionless WebGL environments and highly optimized e-commerce stores that captivate audiences directly in their browsers and convert visitors into loyal customers.
+                    </p>
+                </div>
+
+                <div class="gs-reveal bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl mt-0 md:-mt-4">
+                    <div class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-[#ff0050] to-[#00f2fe] mb-4 md:mb-6 flex items-center justify-center opacity-80">
+                        <div class="h-9 w-9 md:h-11 md:w-11 rounded-full bg-[#111]"></div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white tracking-wide">Reels & TikToks</h3>
+                    <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light">
+                        Directing and editing high-retention, viral-ready vertical video content designed to dominate social algorithms and capture massive attention.
+                    </p>
+                </div>
+
+                <div class="gs-reveal bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl mt-0 md:translate-y-8">
+                    <div class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-[#ffaa00] to-transparent mb-4 md:mb-6 flex items-center justify-center opacity-80">
+                        <div class="h-9 w-9 md:h-11 md:w-11 rounded-full bg-[#111]"></div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white tracking-wide">Branding</h3>
+                    <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light mb-5 md:mb-6">
+                        We study your core brand identity to curate a cohesive, premium aesthetic feel for your social media home pages. See our aesthetic in action:
+                    </p>
+                    <div class="flex flex-col gap-3 md:gap-4 text-sm md:text-base">
+                        <a href="https://www.instagram.com/sirkorab?igsh=aGd2Z2dpeTlpbHVm" target="_blank" rel="noopener noreferrer" class="text-white font-bold group active:text-[#00f3ff] hover:text-[#00f3ff] transition-colors duration-300 flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-[#00f3ff] transition-colors"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            @sirkorab
+                        </a>
+                        <a href="https://www.instagram.com/samfitlb?igsh=YXhvaHF6eXdoMHE=" target="_blank" rel="noopener noreferrer" class="text-white font-bold group active:text-[#00f3ff] hover:text-[#00f3ff] transition-colors duration-300 flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-[#00f3ff] transition-colors"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            @samfitlb
+                        </a>
+                        <a href="https://www.instagram.com/mashabeautylb?igsh=MXdjeXg3eGw3M2t5OA==" target="_blank" rel="noopener noreferrer" class="text-white font-bold group active:text-[#00f3ff] hover:text-[#00f3ff] transition-colors duration-300 flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-[#00f3ff] transition-colors"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            @mashabeautylb
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="min-h-[100svh] w-full flex flex-col justify-center items-center text-center px-4 sm:px-6 pointer-events-none">
+            <h2 class="gs-reveal text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter mb-6 md:mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-[#444]">
+                THE FUTURE IS NOW.
+            </h2>
+            
+            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" class="gs-reveal px-8 py-3.5 md:px-10 md:py-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-[10px] md:text-xs uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer pointer-events-auto inline-block mt-2 md:mt-4">
+                Start your project
+            </a>
+            
+            <div class="h-20 w-full pointer-events-none"></div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 0. LOADER LOGIC ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                document.body.classList.remove('overflow-hidden'); // Allow scrolling
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1000); 
+            }, 800); 
+        });
+
+        // --- 1. THREE.JS SETUP ---
+        const canvas = document.getElementById('webgl-canvas');
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas, 
+            antialias: true, 
+            alpha: true 
+        });
+        
+        // Optimize for mobile: cap pixel ratio to 2 to save battery/performance on phones
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const scene = new THREE.Scene();
+
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        // Pushes the camera slightly further back on mobile so the crystal fits perfectly on narrow screens
+        const isMobile = window.innerWidth < 768;
+        const cameraBaseZ = isMobile ? 35 : 28; 
+        camera.position.z = cameraBaseZ;
+
+        // --- 2. LIGHTING ---
+        const blueLight = new THREE.DirectionalLight(0x00f3ff, 2.5);
+        blueLight.position.set(10, 10, 5);
+        scene.add(blueLight);
+
+        const purpleLight = new THREE.PointLight(0x9d00ff, 4, 50);
+        purpleLight.position.set(-8, -8, 2);
+        scene.add(purpleLight);
+
+        const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        rimLight.position.set(0, 5, -15);
+        scene.add(rimLight);
+
+        // --- 3. 3D OBJECT (Cyber-Crystal) & MATERIAL ---
+        const geometry = new THREE.IcosahedronGeometry(6, 1);
+        
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0x1a1a1a,
+            metalness: 0.8,
+            roughness: 0.25,
+            transmission: 1.0,
+            thickness: 2.0,
+            ior: 1.5,
+            iridescence: 0.8,
+            iridescenceIOR: 1.3,
+            side: THREE.DoubleSide
+        });
+
+        const mainObject = new THREE.Mesh(geometry, material);
+        scene.add(mainObject);
+
+        // --- 4. STARDUST PARTICLE SYSTEM ---
+        const particlesGeometry = new THREE.BufferGeometry();
+        // Lower particle count slightly on mobile for smoother framerates
+        const particlesCount = isMobile ? 800 : 1500; 
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 80;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0x00f3ff,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // --- 5. RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- 6. ANIMATION LOOP & PHYSICS ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Continuous slow rotation
+            mainObject.rotation.x = elapsedTime * 0.15;
+            mainObject.rotation.y = elapsedTime * 0.2;
+
+            // Slow drift for stardust
+            particlesMesh.rotation.y = elapsedTime * 0.03;
+            particlesMesh.rotation.x = elapsedTime * 0.01;
+
+            // Camera floating effect
+            camera.position.x = Math.sin(elapsedTime * 0.8) * 0.4;
+            camera.position.y = Math.cos(elapsedTime * 0.6) * 0.4;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // --- 7. GSAP SCROLL ANIMATIONS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.to(camera.position, {
+            z: -12, 
+            ease: "none",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5
+            }
+        });
+
+        gsap.to(camera.rotation, {
+            z: Math.PI / 2, 
+            ease: "none",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5
+            }
+        });
+
+        // Delay Hero animations until loader finishes
+        setTimeout(() => {
+            gsap.fromTo(".gs-fade-in", 
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out" }
+            );
+        }, 800);
+
+        const reveals = document.querySelectorAll('.gs-reveal');
+        reveals.forEach(el => {
+            gsap.fromTo(el, 
+                { opacity: 0, y: 40 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1, 
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 90%", // Triggers slightly earlier on mobile so it doesn't get cut off
+                        end: "top 50%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+    </script>
+</body>
+</html>
