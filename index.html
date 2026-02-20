@@ -35,11 +35,11 @@
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100svh; /* svh fixes mobile safari URL bar issues */
+            height: 100svh;
             z-index: 0;
             pointer-events: none;
         }
-        /* Custom Scrollbar (Hidden on mobile for cleaner look, visible on desktop) */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -78,17 +78,17 @@
     <main class="ui-layer flex flex-col items-center w-full">
         
         <section class="h-[100svh] w-full flex flex-col justify-center items-center text-center px-4 sm:px-6">
-            <p class="agency-title font-bold text-lg sm:text-2xl md:text-3xl mb-3 md:mb-4 tracking-[0.2em] md:tracking-[0.3em] gs-fade-in uppercase bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-sm">
+            <p class="agency-title font-bold text-xl sm:text-2xl md:text-3xl mb-3 md:mb-4 tracking-[0.25em] md:tracking-[0.3em] gs-fade-in uppercase bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-sm">
                 Sir Korab Agency
             </p>
-            <h1 class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-lg gs-fade-in leading-[1.1]">
+            <h1 class="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-5 md:mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-lg gs-fade-in leading-[1.1]">
                 WE BUILD DIGITAL<br/>REALITIES
             </h1>
-            <p class="text-base sm:text-lg md:text-xl text-gray-400 mb-8 md:mb-10 max-w-2xl font-light tracking-wide gs-fade-in px-2">
+            <p class="text-lg sm:text-xl md:text-2xl text-gray-400 mb-10 md:mb-12 max-w-2xl font-light tracking-wide gs-fade-in px-4">
                 Pioneering the next era of spatial computing, viral short-form content, and highly immersive web experiences.
             </p>
             
-            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" class="gs-fade-in px-8 py-3.5 md:px-10 md:py-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-[10px] md:text-xs uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer pointer-events-auto inline-block">
+            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" class="gs-fade-in px-10 py-4 md:px-12 md:py-5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer pointer-events-auto inline-block">
                 Contact Us
             </a>
         </section>
@@ -160,7 +160,7 @@
                 THE FUTURE IS NOW.
             </h2>
             
-            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" class="gs-reveal px-8 py-3.5 md:px-10 md:py-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-[10px] md:text-xs uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer pointer-events-auto inline-block mt-2 md:mt-4">
+            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" class="gs-reveal px-10 py-4 md:px-12 md:py-5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer pointer-events-auto inline-block mt-2 md:mt-4">
                 Start your project
             </a>
             
@@ -175,7 +175,7 @@
             const loader = document.getElementById('loader');
             setTimeout(() => {
                 loader.style.opacity = '0';
-                document.body.classList.remove('overflow-hidden'); // Allow scrolling
+                document.body.classList.remove('overflow-hidden'); 
                 setTimeout(() => {
                     loader.style.display = 'none';
                 }, 1000); 
@@ -332,7 +332,7 @@
                     ease: "power2.out",
                     scrollTrigger: {
                         trigger: el,
-                        start: "top 90%", // Triggers slightly earlier on mobile so it doesn't get cut off
+                        start: "top 90%",
                         end: "top 50%",
                         toggleActions: "play none none reverse"
                     }
