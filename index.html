@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sir Korab | Virality Studio</title>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sirkorab.space/">
@@ -49,6 +49,16 @@
             height: 100svh;
             z-index: 0;
             pointer-events: none;
+            touch-action: none;
+        }
+        /* Ensure main content scrolls freely on mobile (Claude's fix) */
+        html, body {
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+        }
+        .ui-layer {
+            touch-action: pan-y;
         }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -92,7 +102,7 @@
         </button>
     </div>
 
-    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050505] transition-opacity duration-1000 ease-in-out h-[100svh] w-full">
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050505] transition-opacity duration-1000 ease-in-out h-[100svh] w-full" style="touch-action: none;">
         <div class="flex flex-col items-center px-4 text-center">
             <div class="w-10 h-10 md:w-12 md:h-12 border-4 border-white/10 border-t-[#4caf50] rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(76,175,80,0.4)]"></div>
             <p class="agency-title text-white tracking-[0.3em] md:tracking-[0.4em] font-bold text-[10px] md:text-xs uppercase animate-pulse">Initializing Void...</p>
@@ -225,7 +235,7 @@
                 document.body.classList.remove('overflow-hidden'); 
                 setTimeout(() => {
                     loader.style.display = 'none';
-                    ScrollTrigger.refresh(); // Crucial fix for the scroll glitch!
+                    ScrollTrigger.refresh(); 
                 }, 1000); 
             }, 800); 
         });
@@ -235,8 +245,13 @@
         const renderer = new THREE.WebGLRenderer({ 
             canvas, 
             antialias: true, 
-            alpha: true 
+            alpha: true,
+            powerPreference: "high-performance"
         });
+        
+        // Prevent the WebGL canvas from intercepting touch/pointer events
+        canvas.style.touchAction = 'none';
+        canvas.style.pointerEvents = 'none';
         
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -303,11 +318,15 @@
         scene.add(particlesMesh);
 
         // --- 5. RESIZE HANDLER ---
+        let currentWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            ScrollTrigger.refresh();
+            if (window.innerWidth !== currentWindowWidth) {
+                currentWindowWidth = window.innerWidth;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                ScrollTrigger.refresh();
+            }
         });
 
         // --- 6. ANIMATION LOOP & PHYSICS ---
@@ -336,27 +355,30 @@
         // --- 7. GSAP SCROLL ANIMATIONS ---
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.to(camera.position, {
-            z: -12, 
-            ease: "none",
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1.5
-            }
-        });
+        // Claude's fix: Only enable scroll-driven 3D camera on desktop
+        if (!isMobile) {
+            gsap.to(camera.position, {
+                z: -12, 
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.5
+                }
+            });
 
-        gsap.to(camera.rotation, {
-            z: Math.PI / 2, 
-            ease: "none",
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1.5
-            }
-        });
+            gsap.to(camera.rotation, {
+                z: Math.PI / 2, 
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.5
+                }
+            });
+        }
 
         // Delay Hero animations until loader finishes
         setTimeout(() => {
@@ -410,7 +432,7 @@
     <div id="calendlyModal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 bg-black/70 backdrop-blur-md">
         <div id="modalContent" class="relative w-full max-w-4xl h-[85vh] md:h-[80vh] bg-[#050505] border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-500 mx-4">
             
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer pointer-events-auto">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
