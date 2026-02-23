@@ -49,6 +49,16 @@
             height: 100svh;
             z-index: 0;
             pointer-events: none !important; /* Absolutely prevents touch hijacking */
+            touch-action: none;
+        }
+        /* Ensure main content scrolls freely on mobile */
+        html, body {
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+        }
+        .ui-layer {
+            touch-action: pan-y;
         }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -218,6 +228,9 @@
             powerPreference: "high-performance"
         });
         
+        canvas.style.touchAction = 'none';
+        canvas.style.pointerEvents = 'none';
+        
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -272,7 +285,7 @@
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                ScrollTrigger.refresh(); // Only refresh if the phone is rotated sideways
+                // We do NOT call ScrollTrigger.refresh() here. This allows iOS Safari to resize naturally.
             }
         });
 
@@ -294,10 +307,10 @@
         // --- 7. GSAP INITIALIZATION ---
         gsap.registerPlugin(ScrollTrigger);
         
-        // THE FIX: Tell GSAP to ignore all mobile height changes entirely.
+        // THIS IS THE ULTIMATE FIX: Tell GSAP to ignore the address bar completely.
         ScrollTrigger.config({ ignoreMobileResize: true });
 
-        // THE FIX: Do not attach the 3D camera zoom to the scroll wheel on phones.
+        // Desktop only: tie camera to scroll wheel
         if (!isMobile) {
             gsap.to(camera.position, {
                 z: -12, ease: "none",
