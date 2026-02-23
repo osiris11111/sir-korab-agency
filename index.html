@@ -51,15 +51,6 @@
             pointer-events: none;
             touch-action: none;
         }
-        /* Ensure main content scrolls freely on mobile */
-        html, body {
-            touch-action: pan-y;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: none;
-        }
-        .ui-layer {
-            touch-action: pan-y;
-        }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -286,7 +277,7 @@
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+                // We no longer manually refresh ScrollTrigger here to prevent jumpiness on mobile rotation
             }
         });
 
@@ -307,6 +298,9 @@
 
         // --- 7. GSAP INITIALIZATION ---
         gsap.registerPlugin(ScrollTrigger);
+        
+        // CRITICAL FIX: Tell GSAP to ignore the address bar hiding/showing so it doesn't kill your scroll!
+        ScrollTrigger.config({ ignoreMobileResize: true });
 
         if (!isMobile) {
             gsap.to(camera.position, {
