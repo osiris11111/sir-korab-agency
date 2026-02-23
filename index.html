@@ -36,9 +36,11 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
+        /* Custom Font for Agency Title */
         .agency-title {
             font-family: 'Space Grotesk', sans-serif;
         }
+        /* Fixed Background Canvas */
         #webgl-canvas {
             position: fixed;
             top: 0;
@@ -46,48 +48,59 @@
             width: 100vw;
             height: 100svh;
             z-index: 0;
-            /* Belt AND suspenders: block all pointer/touch interaction via CSS */
-            pointer-events: none !important;
+            pointer-events: none;
             touch-action: none;
         }
-        html {
-            /* Let vertical finger swipes always scroll */
+        /* Ensure main content scrolls freely on mobile */
+        html, body {
             touch-action: pan-y;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
         }
-        body {
+        .ui-layer {
             touch-action: pan-y;
-            overscroll-behavior-y: none;
         }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-top);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        ::selection {
+            background: rgba(76, 175, 80, 0.3);
+            color: white;
+        }
+        /* Layer positioning for UI */
         .ui-layer {
             position: relative;
             z-index: 10;
-            touch-action: pan-y;
         }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-top); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-        ::selection { background: rgba(76, 175, 80, 0.3); color: white; }
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM8SLY7F5Q"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-DM8SLY7F5Q');
-    </script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DM8SLY7F5Q');
+</script>
+    
 </head>
 <body>
-
     <div class="fixed top-4 right-4 md:top-6 md:right-6 z-50 ui-layer">
         <button onclick="openModal(); gtag('event', 'calendly_click', {'button_location': 'top_nav'});" class="px-4 py-2 md:px-6 md:py-3 rounded-full bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 hover:border-white/40 transition-all duration-300 text-[10px] md:text-sm uppercase font-bold text-white tracking-[0.15em] shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95">
             Book a Call
         </button>
     </div>
-
-
 
     <canvas id="webgl-canvas"></canvas>
 
@@ -100,6 +113,7 @@
             <h1 class="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-lg gs-fade-in leading-[1.1]">
                 WE BUILD DIGITAL<br/>REALITIES
             </h1>
+            
             <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'whatsapp_click', {'button_location': 'hero_section'});" class="gs-fade-in px-10 py-4 md:px-12 md:py-5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer inline-block">
                 Join Us
             </a>
@@ -188,9 +202,11 @@
             <h2 class="gs-reveal text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter mb-6 md:mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-[#444]">
                 THE FUTURE IS NOW.
             </h2>
+            
             <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'whatsapp_click', {'button_location': 'footer_section'});" class="gs-reveal px-10 py-4 md:px-12 md:py-5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer inline-block mt-2 md:mt-4">
                 Start your project
             </a>
+            
             <div class="absolute bottom-8 md:bottom-12 left-0 right-0 flex flex-col items-center gs-reveal w-full">
                 <a href="mailto:hello@sirkorab.space" class="text-xl md:text-2xl font-bold text-white hover:text-gray-300 transition-colors duration-300 mb-2 tracking-wide">
                     hello@sirkorab.space
@@ -204,49 +220,26 @@
     </main>
 
     <script>
-        // ============================================================
-        // MOBILE SCROLL FIX — CORE LOGIC
-        // Three.js r128 attaches its own touchstart/touchmove listeners
-        // to the canvas internally. On iOS Chrome these listeners call
-        // preventDefault() which kills the browser's native scroll.
-        // The fix: intercept addEventListener on the canvas BEFORE
-        // Three.js loads its renderer, so we can block passive:false
-        // touch listeners from ever being registered.
-        // ============================================================
-        const canvas = document.getElementById('webgl-canvas');
-        const isMobile = window.innerWidth < 768;
-
-        if (isMobile) {
-            // Override addEventListener on this specific canvas element
-            // to silently drop any touch event listeners Three.js tries to add
-            const originalAddEventListener = canvas.addEventListener.bind(canvas);
-            canvas.addEventListener = function(type, listener, options) {
-                if (type === 'touchstart' || type === 'touchmove' || type === 'touchend' || type === 'pointerdown' || type === 'pointermove' || type === 'pointerup') {
-                    // Silently drop — don't let Three.js register touch handlers
-                    return;
-                }
-                return originalAddEventListener(type, listener, options);
-            };
-        }
-
         // --- 1. THREE.JS SETUP ---
+        const canvas = document.getElementById('webgl-canvas');
         const renderer = new THREE.WebGLRenderer({ 
-            canvas,
-            antialias: !isMobile, // Save GPU on mobile
+            canvas, 
+            antialias: true, 
             alpha: true,
             powerPreference: "high-performance"
         });
-
-        // Hard-block touch/pointer events on canvas via CSS + JS
-        canvas.style.pointerEvents = 'none';
+        
         canvas.style.touchAction = 'none';
-
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+        canvas.style.pointerEvents = 'none';
+        
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const cameraBaseZ = isMobile ? 35 : 28;
+        
+        const isMobile = window.innerWidth < 768;
+        const cameraBaseZ = isMobile ? 35 : 28; 
         camera.position.z = cameraBaseZ;
 
         // --- 2. LIGHTING ---
@@ -254,7 +247,7 @@
         beigeLight.position.set(10, 10, 5);
         scene.add(beigeLight);
 
-        const greenLight = new THREE.PointLight(0x4caf50, 4, 50);
+        const greenLight = new THREE.PointLight(0x4caf50, 4, 50); 
         greenLight.position.set(-8, -8, 2);
         scene.add(greenLight);
 
@@ -265,38 +258,27 @@
         // --- 3. 3D OBJECT ---
         const geometry = new THREE.TorusKnotGeometry(6, 1.8, 256, 64);
         const material = new THREE.MeshPhysicalMaterial({
-            color: 0x1a1a1a,
-            metalness: 0.8,
-            roughness: 0.25,
-            transmission: 1.0,
-            thickness: 2.0,
-            ior: 1.5,
-            iridescence: 0.8,
-            iridescenceIOR: 1.3,
-            side: THREE.DoubleSide
+            color: 0x1a1a1a, metalness: 0.8, roughness: 0.25, transmission: 1.0,
+            thickness: 2.0, ior: 1.5, iridescence: 0.8, iridescenceIOR: 1.3, side: THREE.DoubleSide
         });
         const mainObject = new THREE.Mesh(geometry, material);
         scene.add(mainObject);
 
-        // --- 4. STARDUST ---
+        // --- 4. PARTICLES ---
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = isMobile ? 800 : 1500;
+        const particlesCount = isMobile ? 800 : 1500; 
         const posArray = new Float32Array(particlesCount * 3);
-        for (let i = 0; i < particlesCount * 3; i++) {
+        for(let i = 0; i < particlesCount * 3; i++) {
             posArray[i] = (Math.random() - 0.5) * 80;
         }
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.05,
-            color: 0x4caf50,
-            transparent: true,
-            opacity: 0.6,
-            blending: THREE.AdditiveBlending
+            size: 0.05, color: 0x4caf50, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending
         });
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
-        // --- 5. RESIZE HANDLER ---
+        // --- 5. RESIZE ---
         let currentWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
             if (window.innerWidth !== currentWindowWidth) {
@@ -304,7 +286,7 @@
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                ScrollTrigger.refresh();
+                if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
             }
         });
 
@@ -323,84 +305,60 @@
         }
         animate();
 
-        // --- 7. GSAP SCROLL ANIMATIONS ---
+        // --- 7. GSAP INITIALIZATION ---
         gsap.registerPlugin(ScrollTrigger);
 
-        // Desktop only: scroll-driven camera fly-through
         if (!isMobile) {
             gsap.to(camera.position, {
-                z: -12,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1.5
-                }
+                z: -12, ease: "none",
+                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
             });
             gsap.to(camera.rotation, {
-                z: Math.PI / 2,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1.5
-                }
+                z: Math.PI / 2, ease: "none",
+                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
             });
         }
 
-        // Hero fade-in
-        setTimeout(() => {
-            gsap.fromTo(".gs-fade-in",
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out" }
-            );
-        }, 800);
+        // Fade in Hero Text
+        gsap.fromTo(".gs-fade-in", 
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out" }
+        );
 
-        // Scroll reveal cards
-        document.querySelectorAll('.gs-reveal').forEach(el => {
-            gsap.fromTo(el,
+        // Scroll Reveals
+        const reveals = document.querySelectorAll('.gs-reveal');
+        reveals.forEach(el => {
+            gsap.fromTo(el, 
                 { opacity: 0, y: 40 },
-                {
+                { 
                     opacity: 1, y: 0, duration: 1, ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 90%",
-                        end: "top 50%",
-                        toggleActions: "play none none reverse"
-                    }
+                    scrollTrigger: { trigger: el, start: "top 90%", end: "top 50%", toggleActions: "play none none reverse" }
                 }
             );
         });
 
-        // --- 8. COUNTER ANIMATION ---
-        document.querySelectorAll('.counter-val').forEach(counter => {
+        // Counters
+        const counters = document.querySelectorAll('.counter-val');
+        counters.forEach(counter => {
             let target = parseInt(counter.getAttribute('data-target'));
             let obj = { val: 0 };
             gsap.to(obj, {
-                val: target,
-                duration: 2.5,
-                ease: "power3.out",
-                onUpdate: () => {
-                    counter.innerHTML = Math.floor(obj.val).toLocaleString('en-US');
-                },
-                scrollTrigger: {
-                    trigger: counter,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                }
+                val: target, duration: 2.5, ease: "power3.out",
+                onUpdate: () => { counter.innerHTML = Math.floor(obj.val).toLocaleString('en-US'); },
+                scrollTrigger: { trigger: counter, start: "top 85%", toggleActions: "play none none reverse" }
             });
         });
     </script>
 
     <div id="calendlyModal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 bg-black/70 backdrop-blur-md">
         <div id="modalContent" class="relative w-full max-w-4xl h-[85vh] md:h-[80vh] bg-[#050505] border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-500 mx-4">
+            
             <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer pointer-events-auto">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
+
             <div class="calendly-inline-widget w-full h-full" data-url="https://calendly.com/sirkorab/30min?hide_gdpr_banner=1&background_color=050505&text_color=ffffff" style="min-width:320px;height:100%;"></div>
             <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
         </div>
