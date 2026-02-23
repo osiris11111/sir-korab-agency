@@ -51,6 +51,15 @@
             pointer-events: none;
             touch-action: none;
         }
+        /* Ensure main content scrolls freely on mobile */
+        html, body {
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+        }
+        .ui-layer {
+            touch-action: pan-y;
+        }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -91,6 +100,13 @@
         <button onclick="openModal(); gtag('event', 'calendly_click', {'button_location': 'top_nav'});" class="px-4 py-2 md:px-6 md:py-3 rounded-full bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 hover:border-white/40 transition-all duration-300 text-[10px] md:text-sm uppercase font-bold text-white tracking-[0.15em] shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95">
             Book a Call
         </button>
+    </div>
+
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050505] transition-opacity duration-1000 ease-in-out h-[100svh] w-full" style="touch-action: none;">
+        <div class="flex flex-col items-center px-4 text-center">
+            <div class="w-10 h-10 md:w-12 md:h-12 border-4 border-white/10 border-t-[#4caf50] rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(76,175,80,0.4)]"></div>
+            <p class="agency-title text-white tracking-[0.3em] md:tracking-[0.4em] font-bold text-[10px] md:text-xs uppercase animate-pulse">Initializing Void...</p>
+        </div>
     </div>
 
     <canvas id="webgl-canvas"></canvas>
@@ -211,6 +227,19 @@
     </main>
 
     <script>
+        // --- 0. LOADER LOGIC ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                document.body.classList.remove('overflow-hidden'); 
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    ScrollTrigger.refresh(); 
+                }, 1000); 
+            }, 800); 
+        });
+
         // --- 1. THREE.JS SETUP ---
         const canvas = document.getElementById('webgl-canvas');
         const renderer = new THREE.WebGLRenderer({ 
@@ -220,6 +249,7 @@
             powerPreference: "high-performance"
         });
         
+        // Prevent the WebGL canvas from intercepting touch/pointer events
         canvas.style.touchAction = 'none';
         canvas.style.pointerEvents = 'none';
         
@@ -227,6 +257,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const scene = new THREE.Scene();
+
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         
         const isMobile = window.innerWidth < 768;
@@ -270,56 +301,66 @@
         scene.add(particlesMesh);
 
         // --- 5. RESIZE ---
-        let currentWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            if (window.innerWidth !== currentWindowWidth) {
-                currentWindowWidth = window.innerWidth;
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                // We no longer manually refresh ScrollTrigger here to prevent jumpiness on mobile rotation
-            }
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            ScrollTrigger.refresh();
         });
 
-        // --- 6. ANIMATION LOOP ---
+        // --- 6. ANIMATION LOOP & PHYSICS ---
         const clock = new THREE.Clock();
+
         function animate() {
             requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
+
             mainObject.rotation.x = elapsedTime * 0.15;
             mainObject.rotation.y = elapsedTime * 0.2;
             particlesMesh.rotation.y = elapsedTime * 0.03;
             particlesMesh.rotation.x = elapsedTime * 0.01;
             camera.position.x = Math.sin(elapsedTime * 0.8) * 0.4;
             camera.position.y = Math.cos(elapsedTime * 0.6) * 0.4;
+
             renderer.render(scene, camera);
         }
         animate();
 
-        // --- 7. GSAP INITIALIZATION ---
+        // --- 7. GSAP SCROLL ANIMATIONS ---
         gsap.registerPlugin(ScrollTrigger);
-        
-        // CRITICAL FIX: Tell GSAP to ignore the address bar hiding/showing so it doesn't kill your scroll!
-        ScrollTrigger.config({ ignoreMobileResize: true });
 
+        // Claude's fix: Only enable scroll-driven 3D camera on desktop
         if (!isMobile) {
             gsap.to(camera.position, {
-                z: -12, ease: "none",
-                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
+                z: -12, 
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.5
+                }
             });
+
             gsap.to(camera.rotation, {
-                z: Math.PI / 2, ease: "none",
-                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
+                z: Math.PI / 2, 
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.5
+                }
             });
         }
 
-        // Fade in Hero Text
-        gsap.fromTo(".gs-fade-in", 
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out" }
-        );
+        setTimeout(() => {
+            gsap.fromTo(".gs-fade-in", 
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out" }
+            );
+        }, 800);
 
-        // Scroll Reveals
         const reveals = document.querySelectorAll('.gs-reveal');
         reveals.forEach(el => {
             gsap.fromTo(el, 
@@ -331,11 +372,11 @@
             );
         });
 
-        // Counters
         const counters = document.querySelectorAll('.counter-val');
         counters.forEach(counter => {
             let target = parseInt(counter.getAttribute('data-target'));
             let obj = { val: 0 };
+            
             gsap.to(obj, {
                 val: target, duration: 2.5, ease: "power3.out",
                 onUpdate: () => { counter.innerHTML = Math.floor(obj.val).toLocaleString('en-US'); },
@@ -343,11 +384,10 @@
             });
         });
     </script>
-
     <div id="calendlyModal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 bg-black/70 backdrop-blur-md">
         <div id="modalContent" class="relative w-full max-w-4xl h-[85vh] md:h-[80vh] bg-[#050505] border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-500 mx-4">
             
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer pointer-events-auto">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
