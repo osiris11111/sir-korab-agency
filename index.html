@@ -48,17 +48,7 @@
             width: 100vw;
             height: 100svh;
             z-index: 0;
-            pointer-events: none;
-            touch-action: none;
-        }
-        /* Ensure main content scrolls freely on mobile */
-        html, body {
-            touch-action: pan-y;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: none;
-        }
-        .ui-layer {
-            touch-action: pan-y;
+            pointer-events: none !important; /* Absolutely prevents touch hijacking */
         }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -86,13 +76,12 @@
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM8SLY7F5Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DM8SLY7F5Q');
-</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DM8SLY7F5Q');
+    </script>
     
 </head>
 <body>
@@ -102,26 +91,19 @@
         </button>
     </div>
 
-    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050505] transition-opacity duration-1000 ease-in-out h-[100svh] w-full" style="touch-action: none;">
-        <div class="flex flex-col items-center px-4 text-center">
-            <div class="w-10 h-10 md:w-12 md:h-12 border-4 border-white/10 border-t-[#4caf50] rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(76,175,80,0.4)]"></div>
-            <p class="agency-title text-white tracking-[0.3em] md:tracking-[0.4em] font-bold text-[10px] md:text-xs uppercase animate-pulse">Initializing Void...</p>
-        </div>
-    </div>
-
     <canvas id="webgl-canvas"></canvas>
 
     <main class="ui-layer flex flex-col items-center w-full">
         
         <section class="min-h-[100svh] w-full flex flex-col justify-center items-center text-center px-4 sm:px-6">
-            <p class="agency-title font-bold text-2xl sm:text-3xl md:text-4xl mb-3 md:mb-4 tracking-[0.25em] md:tracking-[0.3em] gs-fade-in uppercase bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-sm">
+            <p class="agency-title font-bold text-2xl sm:text-3xl md:text-4xl mb-3 md:mb-4 tracking-[0.25em] md:tracking-[0.3em] gs-fade-in uppercase bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-sm opacity-0">
                 Sir Korab
             </p>
-            <h1 class="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-lg gs-fade-in leading-[1.1]">
+            <h1 class="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-lg gs-fade-in leading-[1.1] opacity-0">
                 WE BUILD DIGITAL<br/>REALITIES
             </h1>
             
-            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'whatsapp_click', {'button_location': 'hero_section'});" class="gs-fade-in px-10 py-4 md:px-12 md:py-5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer inline-block">
+            <a href="https://wa.me/96170216463?text=Hey%20Sir%20Korab%2C%20I%27m%20interested%20in%20starting%20a%20project!" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'whatsapp_click', {'button_location': 'hero_section'});" class="gs-fade-in opacity-0 px-10 py-4 md:px-12 md:py-5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-95 transition-all duration-300 tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm uppercase font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.15)] hover:shadow-[0_0_30px_rgba(37,211,102,0.4)] cursor-pointer inline-block">
                 Join Us
             </a>
         </section>
@@ -227,19 +209,6 @@
     </main>
 
     <script>
-        // --- 0. LOADER LOGIC ---
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                document.body.classList.remove('overflow-hidden'); 
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    ScrollTrigger.refresh(); 
-                }, 1000); 
-            }, 800); 
-        });
-
         // --- 1. THREE.JS SETUP ---
         const canvas = document.getElementById('webgl-canvas');
         const renderer = new THREE.WebGLRenderer({ 
@@ -249,15 +218,10 @@
             powerPreference: "high-performance"
         });
         
-        // Prevent the WebGL canvas from intercepting touch/pointer events
-        canvas.style.touchAction = 'none';
-        canvas.style.pointerEvents = 'none';
-        
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const scene = new THREE.Scene();
-
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         
         const isMobile = window.innerWidth < 768;
@@ -301,65 +265,55 @@
         scene.add(particlesMesh);
 
         // --- 5. RESIZE ---
+        let currentWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            ScrollTrigger.refresh();
+            if (window.innerWidth !== currentWindowWidth) {
+                currentWindowWidth = window.innerWidth;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                ScrollTrigger.refresh(); // Only refresh if the phone is rotated sideways
+            }
         });
 
-        // --- 6. ANIMATION LOOP & PHYSICS ---
+        // --- 6. ANIMATION LOOP ---
         const clock = new THREE.Clock();
-
         function animate() {
             requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
-
             mainObject.rotation.x = elapsedTime * 0.15;
             mainObject.rotation.y = elapsedTime * 0.2;
             particlesMesh.rotation.y = elapsedTime * 0.03;
             particlesMesh.rotation.x = elapsedTime * 0.01;
             camera.position.x = Math.sin(elapsedTime * 0.8) * 0.4;
             camera.position.y = Math.cos(elapsedTime * 0.6) * 0.4;
-
             renderer.render(scene, camera);
         }
         animate();
 
-        // --- 7. GSAP SCROLL ANIMATIONS ---
+        // --- 7. GSAP INITIALIZATION ---
         gsap.registerPlugin(ScrollTrigger);
+        
+        // THE FIX: Tell GSAP to ignore all mobile height changes entirely.
+        ScrollTrigger.config({ ignoreMobileResize: true });
 
-        // Claude's fix: Only enable scroll-driven 3D camera on desktop
+        // THE FIX: Do not attach the 3D camera zoom to the scroll wheel on phones.
         if (!isMobile) {
             gsap.to(camera.position, {
-                z: -12, 
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1.5
-                }
+                z: -12, ease: "none",
+                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
             });
-
             gsap.to(camera.rotation, {
-                z: Math.PI / 2, 
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1.5
-                }
+                z: Math.PI / 2, ease: "none",
+                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1.5 }
             });
         }
 
-        setTimeout(() => {
-            gsap.fromTo(".gs-fade-in", 
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out" }
-            );
-        }, 800);
+        // TRIGGER HERO ANIMATIONS IMMEDIATELY (No Loader Delay)
+        gsap.fromTo(".gs-fade-in", 
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out", delay: 0.2 }
+        );
 
         const reveals = document.querySelectorAll('.gs-reveal');
         reveals.forEach(el => {
@@ -376,7 +330,6 @@
         counters.forEach(counter => {
             let target = parseInt(counter.getAttribute('data-target'));
             let obj = { val: 0 };
-            
             gsap.to(obj, {
                 val: target, duration: 2.5, ease: "power3.out",
                 onUpdate: () => { counter.innerHTML = Math.floor(obj.val).toLocaleString('en-US'); },
@@ -384,10 +337,11 @@
             });
         });
     </script>
+
     <div id="calendlyModal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 bg-black/70 backdrop-blur-md">
         <div id="modalContent" class="relative w-full max-w-4xl h-[85vh] md:h-[80vh] bg-[#050505] border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-500 mx-4">
             
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-colors border border-white/10 cursor-pointer pointer-events-auto">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
